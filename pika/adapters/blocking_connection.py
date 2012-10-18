@@ -8,6 +8,7 @@ import socket
 import time
 import types
 
+import pika.log
 import pika.spec as spec
 
 from pika.adapters import BaseConnection
@@ -78,7 +79,7 @@ class BlockingConnection(BaseConnection):
         except socket.timeout:
             self._socket_timeouts += 1
             if self._socket_timeouts > SOCKET_TIMEOUT_THRESHOLD:
-                log.error(SOCKET_TIMEOUT_MESSAGE)
+                pika.log.error(SOCKET_TIMEOUT_MESSAGE)
                 self._handle_disconnect()
 
     def process_data_events(self):
@@ -96,7 +97,7 @@ class BlockingConnection(BaseConnection):
         except socket.timeout:
             self._socket_timeouts += 1
             if self._socket_timeouts > SOCKET_TIMEOUT_THRESHOLD:
-                log.error(SOCKET_TIMEOUT_MESSAGE)
+                pika.log.error(SOCKET_TIMEOUT_MESSAGE)
                 self._handle_disconnect()
 
         # Process our timeout events
@@ -154,9 +155,9 @@ class BlockingConnection(BaseConnection):
         for timeout_id in keys:
             if timeout_id in self._timeouts and \
                 self._timeouts[timeout_id]['deadline'] <= start_time:
-                log.debug('%s: Timeout calling %s',
-                          self.__class__.__name__,
-                          self._timeouts[timeout_id]['handler'])
+                pika.log.debug('%s: Timeout calling %s',
+                               self.__class__.__name__,
+                               self._timeouts[timeout_id]['handler'])
                 self._timeouts[timeout_id]['handler']()
                 del(self._timeouts[timeout_id])
 
