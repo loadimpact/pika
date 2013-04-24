@@ -240,7 +240,7 @@ class BlockingChannelTransport(ChannelTransport):
         self.wait = wait
         self._received_response = False
         self.connection._send_method(self.channel_number, method, content)
-        while self.wait and not self._received_response:
+        while wait and not self._received_response:
             try:
                 self.connection.process_data_events()
             except AMQPConnectionError:
